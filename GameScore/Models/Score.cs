@@ -12,5 +12,6 @@ namespace GameScore.Models
         public int ID { get; set; }
         public string Name { get; set; }
         public int Points { get; set; }
+        public string Team { get; set; }
     }
 }

@@ -12,45 +12,47 @@ namespace GameScore.Controllers
 {
     public class ScoresController : Controller
     {
+        //field - refers to database
         private GameScoreContext db = new GameScoreContext();
 
         // GET: Scores
         public ActionResult Index()
         {
             return View(db.Scores.ToList());
+            //passes a list of scores entries to the View
         }
 
         // GET: Scores/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id) //? makes int parameter optional
         {
-            if (id == null)
+            if (id == null) //error-handling code - if no ID is provided, we won't bother searching the database
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);//error message
             }
-            Score score = db.Scores.Find(id);
-            if (score == null)
-            {
-                return HttpNotFound();
+            Score score = db.Scores.Find(id); //object score in Class Score is created when id is found in Scores model
+            if (score == null) //error-handling code - if ID doesn't exist
+            { 
+                return HttpNotFound(); //error message
             }
-            return View(score);
+            return View(score); //Controller passing the object score to the View
         }
 
-        // GET: Scores/Create
+        // GET: Scores/Create - load page to View
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Scores/Create
+        // POST: Scores/Create - send information from View to Controller
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Points")] Score score)
+        public ActionResult Create([Bind(Include = "ID,Name,Points,Team")] Score score) //creates entity to pass to Controller and then to Model
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)  //ensures Database is in good condition
             {
-                db.Scores.Add(score);
+                db.Scores.Add(score); 
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -78,7 +80,7 @@ namespace GameScore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Points")] Score score)
+        public ActionResult Edit([Bind(Include = "ID,Name,Points,Team")] Score score)
         {
             if (ModelState.IsValid)
             {
